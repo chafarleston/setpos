@@ -112,7 +112,8 @@ public class JProductAttEdit extends javax.swing.JDialog {
             new SerializerRead() { public Object readValues(DataRead dr) throws BasicException {
                 return new AttributeInstInfo(dr.getString(1), dr.getString(2), dr.getString(3), dr.getString(4));
             }});
-        attvaluesSent = new PreparedSentence(s, "SELECT VALUE FROM ATTRIBUTEVALUE WHERE ATTRIBUTE_ID = ?",
+        //SET Softwatre Update Se grega el Order by para que los atributos aparezcan ordenados 
+        attvaluesSent = new PreparedSentence(s, "SELECT VALUE FROM ATTRIBUTEVALUE WHERE ATTRIBUTE_ID = ? ORDER BY VALUE",
                 SerializerWriteString.INSTANCE,
                 SerializerReadString.INSTANCE);
 
