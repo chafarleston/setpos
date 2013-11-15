@@ -30,11 +30,12 @@ report.setSentence("SELECT " +
                     "CLOSEDCASH.DATESTART, " +
                     "CLOSEDCASH.DATEEND, " +
                     "PAYMENTS.PAYMENT, " +
-                    "SUM(PAYMENTS.TOTAL) AS TOTAL, " + 
+                    "(SELECT IF(PAYMENTS.PAYMENT= 'debtpaid', SUM(-PAYMENTS.TOTAL), SUM(PAYMENTS.TOTAL))) AS TOTAL, " + 
                     "(SELECT MIN( TICKETID ) FROM  `tickets` WHERE  `TICKETTYPE` =0 AND DUEDATE >= CLOSEDCASH.DATESTART AND DUEDATE <= CLOSEDCASH.DATEEND) AS MINFRA, " + 
                     "(SELECT MAX( TICKETID ) FROM  `tickets` WHERE  `TICKETTYPE` =0 AND DUEDATE >= CLOSEDCASH.DATESTART AND DUEDATE <= CLOSEDCASH.DATEEND) AS MAXFRA, " +
                     "(SELECT MIN( TICKETID ) FROM  `tickets` WHERE  `TICKETTYPE` =1 AND DUEDATE >= CLOSEDCASH.DATESTART AND DUEDATE <= CLOSEDCASH.DATEEND) AS MINNFRA, " + 
-                    "(SELECT MAX( TICKETID ) FROM  `tickets` WHERE  `TICKETTYPE` =1 AND DUEDATE >= CLOSEDCASH.DATESTART AND DUEDATE <= CLOSEDCASH.DATEEND) AS MAXNFRA " +
+                    "(SELECT MAX( TICKETID ) FROM  `tickets` WHERE  `TICKETTYPE` =1 AND DUEDATE >= CLOSEDCASH.DATESTART AND DUEDATE <= CLOSEDCASH.DATEEND) AS MAXNFRA, " +
+                    "(SELECT IF((PAYMENTS.PAYMENT ='paperin' OR PAYMENTS.PAYMENT ='magcard' OR PAYMENTS.PAYMENT ='free' OR PAYMENTS.PAYMENT ='debt' OR PAYMENTS.PAYMENT ='cheque'  ), 0, 1)) as TYPEPAYMENT " +   
                     "FROM CLOSEDCASH, PAYMENTS, RECEIPTS " +
                     "WHERE CLOSEDCASH.MONEY = RECEIPTS.MONEY AND PAYMENTS.RECEIPT = RECEIPTS.ID AND ?(QBF_FILTER) " +
                     "GROUP BY CLOSEDCASH.HOST, CLOSEDCASH.HOSTSEQUENCE, CLOSEDCASH.MONEY, CLOSEDCASH.DATESTART, CLOSEDCASH.DATEEND, PAYMENTS.PAYMENT " +
@@ -56,5 +57,6 @@ report.addField("MINFRA", com.openbravo.data.loader.Datas.INT);
 report.addField("MAXFRA", com.openbravo.data.loader.Datas.INT);
 report.addField("MINNFRA", com.openbravo.data.loader.Datas.INT);
 report.addField("MAXNFRA", com.openbravo.data.loader.Datas.INT);
+report.addField("TYPEPAYMENT", com.openbravo.data.loader.Datas.INT);
 report;
 

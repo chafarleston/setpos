@@ -107,10 +107,10 @@ public class StockDiaryEditor extends javax.swing.JPanel implements EditorRecord
         m_ReasonModel.add(MovementReason.IN_PURCHASE);
         m_ReasonModel.add(MovementReason.IN_REFUND);
         m_ReasonModel.add(MovementReason.IN_MOVEMENT);
-       // m_ReasonModel.add(MovementReason.OUT_SALE);
-       // m_ReasonModel.add(MovementReason.OUT_REFUND);
-       // m_ReasonModel.add(MovementReason.OUT_BREAK);
-       // m_ReasonModel.add(MovementReason.OUT_MOVEMENT);
+        m_ReasonModel.add(MovementReason.OUT_SALE);
+        m_ReasonModel.add(MovementReason.OUT_REFUND);
+        m_ReasonModel.add(MovementReason.OUT_BREAK);
+        m_ReasonModel.add(MovementReason.OUT_MOVEMENT);
         m_jreason.setModel(m_ReasonModel);
         
         m_jdate.getDocument().addDocumentListener(dirty);
@@ -615,9 +615,11 @@ public class StockDiaryEditor extends javax.swing.JPanel implements EditorRecord
         jPanel1.add(jLabel9);
         jLabel9.setBounds(10, 210, 150, 25);
 
-        jLabel10.setText("Supplier");
+        jLabel10.setText(AppLocal.getIntString("label.Supplier"));
         jPanel1.add(jLabel10);
         jLabel10.setBounds(10, 270, 150, 25);
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pos_messages_es"); // NOI18N
+        jLabel10.getAccessibleContext().setAccessibleName(bundle.getString("label.Supplier")); // NOI18N
 
         m_jSupplierId.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         m_jSupplierId.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createLineBorder(javax.swing.UIManager.getDefaults().getColor("Button.darkShadow")), javax.swing.BorderFactory.createEmptyBorder(1, 4, 1, 4)));

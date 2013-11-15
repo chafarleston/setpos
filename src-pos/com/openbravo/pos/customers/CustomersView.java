@@ -691,8 +691,8 @@ public class CustomersView extends javax.swing.JPanel implements EditorRecord {
                                     .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtCountry, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-                                    .addComponent(txtRegion, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)))
+                                    .addComponent(txtCountry)
+                                    .addComponent(txtRegion)))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -807,7 +807,8 @@ public class CustomersView extends javax.swing.JPanel implements EditorRecord {
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Shipping address", m_jPanelShippingAddress);
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pos_messages"); // NOI18N
+        jTabbedPane1.addTab(bundle.getString("label.shippingaddress"), m_jPanelShippingAddress); // NOI18N
 
         jScrollPane1.setViewportView(m_jNotes);
 
@@ -851,19 +852,21 @@ public class CustomersView extends javax.swing.JPanel implements EditorRecord {
         add(txtCurdate);
         txtCurdate.setBounds(423, 228, 120, 25);
 
-        jLabel34.setText("Debt Date Limit");
+        jLabel34.setText(AppLocal.getIntString("label.debtdatelimit"));
         add(jLabel34);
         jLabel34.setBounds(10, 259, 180, 25);
+        jLabel34.getAccessibleContext().setAccessibleName("Debt Date Limit");
 
-        jcboDebtDateLimit.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "COD", "7 Days", "15 Days", "30 Days" }));
+        jcboDebtDateLimit.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "COD", "7 Dias", "15 Dias", "30 Dias" }));
         add(jcboDebtDateLimit);
         jcboDebtDateLimit.setBounds(194, 259, 130, 25);
 
-        jLabel35.setText("Mode");
+        jLabel35.setText(AppLocal.getIntString("label.mode"));
         add(jLabel35);
         jLabel35.setBounds(344, 259, 70, 25);
+        jLabel35.getAccessibleContext().setAccessibleName("Mode");
 
-        jcboDebtMode.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Invoice Date", "Each Monday" }));
+        jcboDebtMode.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Fecha de la factura", "Todos los lunes" }));
         add(jcboDebtMode);
         jcboDebtMode.setBounds(423, 259, 120, 25);
     }// </editor-fold>//GEN-END:initComponents

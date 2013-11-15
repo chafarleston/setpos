@@ -124,8 +124,8 @@ public class JParamsSupplier extends javax.swing.JPanel implements ReportEditorC
         add(btnSupplier);
         btnSupplier.setBounds(350, 20, 49, 25);
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pos_messages"); // NOI18N
-        getAccessibleContext().setAccessibleName(bundle.getString("label.Supplier")); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pos_messages_es"); // NOI18N
+        getAccessibleContext().setAccessibleName(bundle.getString("label.bysupplier")); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSupplierActionPerformed

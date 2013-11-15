@@ -2,25 +2,29 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="closedpos" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="104"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
 	<parameter name="ARG" class="java.lang.Object" isForPrompting="false"/>
 	<queryString>
-		<![CDATA[SELECT 
+		<![CDATA[SELECT
 CLOSEDCASH.HOST,
 CLOSEDCASH.MONEY,
-CLOSEDCASH.DATESTART, 
-CLOSEDCASH.DATEEND, 
-PAYMENTS.PAYMENT, 
-SUM(PAYMENTS.TOTAL) AS TOTAL,
-(SELECT MIN( TICKETID ) FROM  `tickets` WHERE  `TICKETTYPE` =0 AND DUEDATE >= CLOSEDCASH.DATESTART AND DUEDATE <= CLOSEDCASH.DATEEND ) AS MINFRA, 
+CLOSEDCASH.DATESTART,
+CLOSEDCASH.DATEEND,
+PAYMENTS.PAYMENT,
+(SELECT IF(PAYMENTS.PAYMENT= 'debtpaid', SUM(-PAYMENTS.TOTAL), SUM(PAYMENTS.TOTAL))) AS TOTAL,
+(SELECT MIN( TICKETID ) FROM  `tickets` WHERE  `TICKETTYPE` =0 AND DUEDATE >= CLOSEDCASH.DATESTART AND DUEDATE <= CLOSEDCASH.DATEEND ) AS MINFRA,
 (SELECT MAX( TICKETID ) FROM  `tickets`WHERE  `TICKETTYPE` =0 AND DUEDATE >= CLOSEDCASH.DATESTART AND DUEDATE <= CLOSEDCASH.DATEEND) AS MAXFRA,
-(SELECT MIN( TICKETID ) FROM  `tickets` WHERE  `TICKETTYPE` =1 AND DUEDATE >= CLOSEDCASH.DATESTART AND DUEDATE <= CLOSEDCASH.DATEEND ) AS MINNFRA, 
-(SELECT MAX( TICKETID ) FROM  `tickets`WHERE  `TICKETTYPE` =1 AND DUEDATE >= CLOSEDCASH.DATESTART AND DUEDATE <= CLOSEDCASH.DATEEND) AS MAXNFRA
-FROM CLOSEDCASH, PAYMENTS 
-WHERE CLOSEDCASH.MONEY = PAYMENTS.MONEY 
-GROUP BY CLOSEDCASH.HOST, CLOSEDCASH.MONEY, CLOSEDCASH.DATESTART, CLOSEDCASH.DATEEND, PAYMENTS.PAYMENT 
+(SELECT MIN( TICKETID ) FROM  `tickets` WHERE  `TICKETTYPE` =1 AND DUEDATE >= CLOSEDCASH.DATESTART AND DUEDATE <= CLOSEDCASH.DATEEND ) AS MINNFRA,
+(SELECT MAX( TICKETID ) FROM  `tickets`WHERE  `TICKETTYPE` =1 AND DUEDATE >= CLOSEDCASH.DATESTART AND DUEDATE <= CLOSEDCASH.DATEEND) AS MAXNFRA,
+(SELECT IF((PAYMENTS.PAYMENT ='paperin' OR PAYMENTS.PAYMENT ='magcard' OR PAYMENTS.PAYMENT ='free' OR PAYMENTS.PAYMENT ='debt' OR PAYMENTS.PAYMENT ='cheque'  ), 0, 1)) as TYPEPAYMENT
+FROM CLOSEDCASH, PAYMENTS
+WHERE CLOSEDCASH.MONEY = PAYMENTS.MONEY
+GROUP BY CLOSEDCASH.HOST, CLOSEDCASH.MONEY, CLOSEDCASH.DATESTART, CLOSEDCASH.DATEEND, PAYMENTS.PAYMENT
 ORDER BY CLOSEDCASH.HOST, CLOSEDCASH.DATESTART]]>
 	</queryString>
 	<field name="TOTAL" class="java.lang.Double"/>
@@ -30,11 +34,11 @@ ORDER BY CLOSEDCASH.HOST, CLOSEDCASH.DATESTART]]>
 	<field name="DATEEND" class="java.util.Date"/>
 	<field name="PAYMENT" class="java.lang.String"/>
 	<field name="SEQUENCE" class="java.lang.Integer"/>
-        <field name="MINFRA" class="java.lang.Integer"/>
-        <field name="MAXFRA" class="java.lang.Integer"/>
-        <field name="MINNFRA" class="java.lang.Integer"/>
-        <field name="MAXNFRA" class="java.lang.Integer"/>
-        
+	<field name="MINFRA" class="java.lang.Integer"/>
+	<field name="MAXFRA" class="java.lang.Integer"/>
+	<field name="MINNFRA" class="java.lang.Integer"/>
+	<field name="MAXNFRA" class="java.lang.Integer"/>
+	<field name="TYPEPAYMENT" class="java.lang.Integer"/>
 	<variable name="BIGTOTAL" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{TOTAL}]]></variableExpression>
 		<initialValueExpression><![CDATA[new Double(0.0)]]></initialValueExpression>
@@ -47,18 +51,21 @@ ORDER BY CLOSEDCASH.HOST, CLOSEDCASH.DATESTART]]>
 		<variableExpression><![CDATA[$F{TOTAL}]]></variableExpression>
 		<initialValueExpression><![CDATA[new Double(0.0)]]></initialValueExpression>
 	</variable>
-        <variable name="VMINFRA" class="java.lang.Integer" calculation="Lowest">
+	<variable name="VMINFRA" class="java.lang.Integer" calculation="Lowest">
 		<variableExpression><![CDATA[$F{MINFRA}]]></variableExpression>
 	</variable>
 	<variable name="VMAXFRA" class="java.lang.Integer" calculation="Highest">
 		<variableExpression><![CDATA[$F{MAXFRA}]]></variableExpression>
 	</variable>
-        <variable name="VMINNFRA" class="java.lang.Integer" calculation="Lowest">
+	<variable name="VMINNFRA" class="java.lang.Integer" calculation="Lowest">
 		<variableExpression><![CDATA[$F{MINNFRA}]]></variableExpression>
 	</variable>
 	<variable name="VMAXNFRA" class="java.lang.Integer" calculation="Highest">
 		<variableExpression><![CDATA[$F{MAXNFRA}]]></variableExpression>
-	</variable>       
+	</variable>
+	<variable name="TYPEPAYMEN" class="java.lang.Integer" resetType="Group" resetGroup="byhost">
+		<variableExpression><![CDATA[$F{TYPEPAYMENT}]]></variableExpression>
+	</variable>
 	<group name="byhost">
 		<groupExpression><![CDATA[$F{HOST}]]></groupExpression>
 		<groupHeader>
@@ -199,9 +206,25 @@ ORDER BY CLOSEDCASH.HOST, CLOSEDCASH.DATESTART]]>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="21">
+			<band height="7">
+				<line>
+					<reportElement key="line-2" mode="Opaque" x="0" y="0" width="530" height="1" forecolor="#000000" backcolor="#FFFFFF"/>
+					<graphicElement fill="Solid">
+						<pen lineWidth="0.25" lineStyle="Solid"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="bytypepay">
+		<groupExpression><![CDATA[$V{TYPEPAYMEN}]]></groupExpression>
+		<groupHeader>
+			<band height="16"/>
+		</groupHeader>
+		<groupFooter>
+			<band height="23">
 				<textField pattern="" isBlankWhenNull="false">
-					<reportElement key="textField-5" mode="Opaque" x="400" y="0" width="110" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+					<reportElement key="textField-5" mode="Opaque" x="400" y="2" width="110" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -213,12 +236,6 @@ ORDER BY CLOSEDCASH.HOST, CLOSEDCASH.DATESTART]]>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[com.openbravo.format.Formats.CURRENCY.formatValue($V{DAYTOTAL})]]></textFieldExpression>
 				</textField>
-				<line>
-					<reportElement key="line-2" mode="Opaque" x="0" y="0" width="530" height="1" forecolor="#000000" backcolor="#FFFFFF"/>
-					<graphicElement fill="Solid">
-						<pen lineWidth="0.25" lineStyle="Solid"/>
-					</graphicElement>
-				</line>
 			</band>
 		</groupFooter>
 	</group>
@@ -227,28 +244,28 @@ ORDER BY CLOSEDCASH.HOST, CLOSEDCASH.DATESTART]]>
 	</background>
 	<title>
 		<band height="150">
-                    <textField evaluationTime="Report" isBlankWhenNull="true" isStretchWithOverflow="true">
+			<textField isStretchWithOverflow="true" evaluationTime="Report" isBlankWhenNull="true">
 				<reportElement x="10" y="40" width="200" height="20"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$R{label.business}]]></textFieldExpression>
 			</textField>
-                        <textField evaluationTime="Report" isBlankWhenNull="true" isStretchWithOverflow="true">
+			<textField isStretchWithOverflow="true" evaluationTime="Report" isBlankWhenNull="true">
 				<reportElement x="10" y="60" width="100" height="20"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$R{label.nit}]]></textFieldExpression>
 			</textField>
-                        <textField evaluationTime="Report" isBlankWhenNull="true" isStretchWithOverflow="true">
+			<textField isStretchWithOverflow="true" evaluationTime="Report" isBlankWhenNull="true">
 				<reportElement x="10" y="80" width="350" height="20"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$R{label.resolucion}]]></textFieldExpression>
 			</textField>
-                    <textField evaluationTime="Report" isBlankWhenNull="true">
+			<textField evaluationTime="Report" isBlankWhenNull="true">
 				<reportElement x="90" y="100" width="50" height="20"/>
 				<textElement>
 					<font size="12"/>
@@ -262,7 +279,7 @@ ORDER BY CLOSEDCASH.HOST, CLOSEDCASH.DATESTART]]>
 				</textElement>
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{VMAXFRA}]]></textFieldExpression>
 			</textField>
-                        <textField evaluationTime="Report" isBlankWhenNull="true">
+			<textField evaluationTime="Report" isBlankWhenNull="true">
 				<reportElement x="90" y="120" width="20" height="20"/>
 				<textElement>
 					<font size="12"/>
@@ -276,37 +293,34 @@ ORDER BY CLOSEDCASH.HOST, CLOSEDCASH.DATESTART]]>
 				</textElement>
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{VMAXNFRA}]]></textFieldExpression>
 			</textField>
-                        <textField >
+			<textField>
 				<reportElement x="10" y="100" width="60" height="20"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$R{label.invoicesince}]]></textFieldExpression>
 			</textField>
-                        
-                        <textField >
+			<textField>
 				<reportElement x="10" y="120" width="60" height="20"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$R{label.ninvoicesince}]]></textFieldExpression>
 			</textField>
-                        
-                        <textField >
+			<textField>
 				<reportElement x="130" y="100" width="60" height="20"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$R{label.invoiceuntil}]]></textFieldExpression>
 			</textField>
-                            <textField >
+			<textField>
 				<reportElement x="130" y="120" width="60" height="20"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$R{label.ninvoiceuntil}]]></textFieldExpression>
 			</textField>
-                       
 			<textField pattern="" isBlankWhenNull="true">
 				<reportElement key="textField-8" mode="Transparent" x="270" y="45" width="120" height="20"/>
 				<box>

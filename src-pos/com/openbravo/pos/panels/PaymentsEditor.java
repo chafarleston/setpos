@@ -58,11 +58,13 @@ public class PaymentsEditor extends javax.swing.JPanel implements EditorRecord {
         m_jreason.setModel(m_ReasonModel);
         
         jTotal.addEditorKeys(m_jKeys);
-
+        //SET SOFTWARE UPDATE, activa el panel de tactil para tener la posibilidad de escribir la razon
+        m_jtxtName.addEditorKeys(m_jKeys);  
+               
         m_jreason.addActionListener(dirty);
         jTotal.addPropertyChangeListener("Text", dirty);
         
-
+        
         writeValueEOF();
     }
     
@@ -73,6 +75,8 @@ public class PaymentsEditor extends javax.swing.JPanel implements EditorRecord {
         setReasonTotal(null, null);
         m_jreason.setEnabled(false);
         jTotal.setEnabled(false);
+        //SET SOFTWARE UPDATE, activa cuando ejecutas crear uno nuevo
+        m_jtxtName.setEnabled(true);
     }  
     
     public void writeValueInsert() {
@@ -83,6 +87,9 @@ public class PaymentsEditor extends javax.swing.JPanel implements EditorRecord {
         m_jreason.setEnabled(true);
         jTotal.setEnabled(true);   
         jTotal.activate();
+        //SET SOFTWARE UPDATE, se activa y se borra cuando se crea uno valor nuevo en el campo
+        m_jtxtName.setEnabled(true);
+        m_jtxtName.setText("");
     }
     
     public void writeValueDelete(Object value) {
@@ -93,6 +100,8 @@ public class PaymentsEditor extends javax.swing.JPanel implements EditorRecord {
         setReasonTotal(payment[4], payment[5]);
         m_jreason.setEnabled(false);
         jTotal.setEnabled(false);
+        //SET SOFTWARE UPDATE, se desactiva cuando el valor se borra
+        m_jtxtName.setEnabled(false);
     }
     
     public void writeValueEdit(Object value) {
@@ -104,10 +113,13 @@ public class PaymentsEditor extends javax.swing.JPanel implements EditorRecord {
         m_jreason.setEnabled(false);
         jTotal.setEnabled(false);
         jTotal.activate();
+        //SET SOFTWARE UPDATE, activa para editar el valor que est en la casilla
+        m_jtxtName.setEnabled(true);
     }
     
     public Object createValue() throws BasicException {
-        Object[] payment = new Object[6];
+        //SET SOFTWARE UPDATE, se redimenciona el vector y se le añade el nuevo valor
+        Object[] payment = new Object[8];
         payment[0] = m_sId == null ? UUID.randomUUID().toString() : m_sId;
         payment[1] = m_App.getActiveCashIndex();
         payment[2] = datenew == null ? new Date() : datenew;
@@ -116,6 +128,7 @@ public class PaymentsEditor extends javax.swing.JPanel implements EditorRecord {
         PaymentReason reason = (PaymentReason) m_ReasonModel.getSelectedItem();
         Double dtotal = jTotal.getDoubleValue();
         payment[5] = reason == null ? dtotal : reason.addSignum(dtotal);
+        payment[6] = m_jtxtName.getText();
         return payment;
     }
     
@@ -206,6 +219,8 @@ public class PaymentsEditor extends javax.swing.JPanel implements EditorRecord {
         m_jreason = new javax.swing.JComboBox();
         jLabel3 = new javax.swing.JLabel();
         jTotal = new com.openbravo.editor.JEditorCurrency();
+        jLabel1 = new javax.swing.JLabel();
+        m_jtxtName = new com.openbravo.editor.JEditorString();
         jPanel2 = new javax.swing.JPanel();
         m_jKeys = new com.openbravo.editor.JEditorKeys();
 
@@ -217,6 +232,8 @@ public class PaymentsEditor extends javax.swing.JPanel implements EditorRecord {
 
         jLabel3.setText(AppLocal.getIntString("label.paymenttotal")); // NOI18N
 
+        jLabel1.setText("Descripcion");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -225,11 +242,13 @@ public class PaymentsEditor extends javax.swing.JPanel implements EditorRecord {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(m_jreason, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                    .addComponent(m_jtxtName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(80, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -243,7 +262,11 @@ public class PaymentsEditor extends javax.swing.JPanel implements EditorRecord {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(320, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(m_jtxtName, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(229, Short.MAX_VALUE))
         );
 
         add(jPanel3, java.awt.BorderLayout.CENTER);
@@ -256,6 +279,7 @@ public class PaymentsEditor extends javax.swing.JPanel implements EditorRecord {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel2;
@@ -263,6 +287,7 @@ public class PaymentsEditor extends javax.swing.JPanel implements EditorRecord {
     private com.openbravo.editor.JEditorCurrency jTotal;
     private com.openbravo.editor.JEditorKeys m_jKeys;
     private javax.swing.JComboBox m_jreason;
+    private com.openbravo.editor.JEditorString m_jtxtName;
     // End of variables declaration//GEN-END:variables
     
 }

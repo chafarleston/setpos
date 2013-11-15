@@ -1,4 +1,4 @@
-<?xml version="1.1" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.2" maxVersion="1.2" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <AuxValues>
@@ -26,16 +26,18 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jLabel5" min="-2" pref="150" max="-2" attributes="1"/>
                       <Component id="jLabel3" alignment="0" min="-2" pref="150" max="-2" attributes="1"/>
+                      <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="m_jreason" min="-2" pref="200" max="-2" attributes="1"/>
-                      <Component id="jTotal" min="-2" pref="233" max="-2" attributes="0"/>
+                      <Component id="jTotal" pref="233" max="32767" attributes="0"/>
+                      <Component id="m_jtxtName" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace pref="80" max="32767" attributes="0"/>
               </Group>
@@ -54,7 +56,12 @@
                       <Component id="jLabel3" min="-2" pref="25" max="-2" attributes="0"/>
                       <Component id="jTotal" min="-2" pref="25" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="320" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                      <Component id="m_jtxtName" min="-2" pref="85" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="229" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -80,6 +87,13 @@
           </Properties>
         </Component>
         <Component class="com.openbravo.editor.JEditorCurrency" name="jTotal">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel1">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Descripcion"/>
+          </Properties>
+        </Component>
+        <Component class="com.openbravo.editor.JEditorString" name="m_jtxtName">
         </Component>
       </SubComponents>
     </Container>

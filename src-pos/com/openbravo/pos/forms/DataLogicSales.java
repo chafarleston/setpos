@@ -54,6 +54,8 @@ import com.openbravo.pos.mant.UnitsInfo;
 import com.openbravo.pos.suppliers.SupplierInfoExt;
 import com.openbravo.pos.ticket.FindTicketsInfoCustomer;
 import java.text.DateFormat;
+import java.util.HashSet;
+import java.util.Set;
 /**
  *
  * @author adrianromero
@@ -77,7 +79,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     /** Creates a new instance of SentenceContainerGeneric */
     public DataLogicSales() {
         stockdiaryDatas = new Datas[] {Datas.STRING, Datas.TIMESTAMP, Datas.INT, Datas.STRING, Datas.STRING, Datas.STRING, Datas.DOUBLE, Datas.DOUBLE};
-        paymenttabledatas = new Datas[] {Datas.STRING, Datas.STRING, Datas.TIMESTAMP, Datas.STRING, Datas.STRING, Datas.DOUBLE};
+        paymenttabledatas = new Datas[] {Datas.STRING, Datas.STRING, Datas.TIMESTAMP, Datas.STRING, Datas.STRING, Datas.DOUBLE, Datas.STRING};
         stockdatas = new Datas[] {Datas.STRING, Datas.STRING, Datas.STRING, Datas.DOUBLE, Datas.DOUBLE, Datas.DOUBLE};
         auxiliarDatas = new Datas[] {Datas.STRING, Datas.STRING, Datas.STRING, Datas.STRING, Datas.STRING, Datas.STRING};
         subgroupDatas = new Datas[] {Datas.STRING, Datas.STRING, Datas.STRING, Datas.IMAGE};
@@ -537,7 +539,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                         setBytes(6, (byte[]) Formats.BYTEA.parseValue(ticket.getReturnMessage()));
                         setString(7, p.getChequeNumber());
                         setString(8, Bank);
-                        setString(9, p.getChequeDate());
+                        setString(9, p.getChequeDate());    
                     }});
 
                     if ("debt".equals(p.getName()) || "debtpaid".equals(p.getName())) {
@@ -1131,7 +1133,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
             }
         };
     }
-    
+//SET SOFTWARE UPDATE, se añade en el insert el campo nuevo, el vector con el nuevo valor    
     public final SentenceExec getPaymentMovementInsert() {
         return new SentenceExecTransaction(s) {
             public int execInTransaction(Object params) throws BasicException {
@@ -1139,8 +1141,8 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                     , "INSERT INTO RECEIPTS (ID, MONEY, DATENEW) VALUES (?, ?, ?)"
                     , new SerializerWriteBasicExt(paymenttabledatas, new int[] {0, 1, 2})).exec(params);
                 return new PreparedSentence(s
-                    , "INSERT INTO PAYMENTS (ID, RECEIPT, PAYMENT, TOTAL) VALUES (?, ?, ?, ?)"
-                    , new SerializerWriteBasicExt(paymenttabledatas, new int[] {3, 0, 4, 5})).exec(params);
+                    , "INSERT INTO PAYMENTS (ID, RECEIPT, PAYMENT, TOTAL, DSCREASON) VALUES (?, ?, ?, ?, ?)"
+                    , new SerializerWriteBasicExt(paymenttabledatas, new int[] {3, 0, 4, 5, 6})).exec(params);
             }
         };
     }
